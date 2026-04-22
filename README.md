@@ -1,12 +1,12 @@
 # text-to-svg
 
-**text-to-svg** renders LaTeX math formulas into SVG or PNG images on demand, served over a simple HTTP API. It is the self-hosted replacement for the public `tex.cheminfo.org` service (previously `cheminfo/tex-to-svg-docker`), using MathJax 3 server-side for high-fidelity output and a React + KaTeX frontend for interactive authoring and sharing.
+**text-to-svg** renders LaTeX math formulas into SVG or PNG images on demand, served over a simple HTTP API. It is the self-hosted replacement for the public `tex.cheminfo.org` service (previously `cheminfo/tex-to-svg-docker`), using MathJax 3 for both server-side rendering and the React frontend for interactive authoring and sharing.
 
 ## Features
 
 - Stateless GET API — embed rendered math anywhere with a plain `<img>` tag
 - SVG and PNG output with configurable background color and PNG resolution
-- React frontend with live KaTeX preview, example gallery, and clipboard export
+- React frontend with live MathJax preview, example gallery, and clipboard export
 - Drop-in URL compatibility with `tex.cheminfo.org/?tex=...` bookmarks and links
 
 ## Local development
@@ -65,4 +65,4 @@ Requires an external Docker network named `traefik`. The example config routes `
 
 ---
 
-Server-side rendering is powered by [MathJax 3](https://www.mathjax.org/). Live preview in the browser uses [KaTeX](https://katex.org/).
+Both server-side rendering and browser preview are powered by [MathJax 3](https://www.mathjax.org/).

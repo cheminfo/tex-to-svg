@@ -35,9 +35,14 @@
   width: 420px;
   flex-shrink: 0;
   background: #fff;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
+}
+
+.tab-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 /* ── Panel header ─────────────────────────────────────────── */
@@ -156,12 +161,12 @@
   width: 100%;
 }
 
-/* ── KaTeX preview ───────────────────────────────────────── */
+/* ── Live preview ────────────────────────────────────────── */
 .section-preview {
   min-height: 80px;
 }
 
-.katex-preview {
+.live-preview {
   min-height: 60px;
   padding: 12px;
   border: 1px solid #f0f2f5;

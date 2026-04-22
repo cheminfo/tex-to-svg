@@ -22,7 +22,4 @@ body,
   background: #f0f2f5;
 }
 
-/* KaTeX display overrides */
-.katex-display {
-  margin: 0 !important;
-}
+

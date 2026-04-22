@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
 import './LatexDocs.css';
-import { KatexRenderer } from './KatexRenderer.tsx';
+import { MathJaxRenderer } from './MathJaxRenderer.tsx';
 import type { DocSection, GreekLetter } from './latexSections.ts';
 import { GREEK_LETTERS, SECTIONS } from './latexSections.ts';
 
@@ -27,7 +27,7 @@ function GreekGrid({
           title={letter.command}
         >
           <span className="greek-name">{letter.name}</span>
-          <KatexRenderer tex={letter.command} displayMode={false} />
+          <MathJaxRenderer tex={letter.command} displayMode={false} />
         </button>
       ))}
     </div>
@@ -55,7 +55,7 @@ function DocRow({
         <code className="doc-code">{entry.tex}</code>
       </div>
       <span className="doc-render">
-        <KatexRenderer tex={entry.tex} displayMode={false} />
+        <MathJaxRenderer tex={entry.tex} displayMode={false} />
       </span>
     </button>
   );

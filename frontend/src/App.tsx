@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import './App.css';
-import { KatexRenderer } from './KatexRenderer.tsx';
+import { MathJaxRenderer } from './MathJaxRenderer.tsx';
 import { LatexDocs } from './LatexDocs.tsx';
 import { LatexEditor } from './LatexEditor.tsx';
 import { DEFAULT_EXAMPLES } from './examples.ts';
@@ -109,7 +109,7 @@ export default function App() {
               // eslint-disable-next-line react/no-array-index-key
               <tr key={index} onClick={() => handleTexChange(formula)}>
                 <td className="formula-cell">
-                  <KatexRenderer tex={formula} displayMode={false} />
+                  <MathJaxRenderer tex={formula} displayMode={false} />
                 </td>
               </tr>
             ))}
@@ -132,12 +132,12 @@ export default function App() {
         </div>
 
         <div className="section section-preview">
-          <div className="katex-preview">
+          <div className="live-preview">
             {tex ? (
-              <KatexRenderer tex={tex} displayMode />
+              <MathJaxRenderer tex={tex} displayMode />
             ) : (
               <span className="placeholder">
-                Live KaTeX preview will appear here
+                Live preview will appear here
               </span>
             )}
           </div>
@@ -182,26 +182,26 @@ export default function App() {
           </button>
         </div>
 
+        <div className="tab-content">
         {activeTab === 'preview' ? (
           <>
             <div className="info-notice">
               <p>
                 The <strong>live preview</strong> renders instantly in your
-                browser via KaTeX — great for checking syntax as you type.
+                browser via MathJax 3 — great for checking syntax as you type.
               </p>
               <p>
-                The <strong>server render</strong> below uses MathJax 3 and is
-                the exact image embedded by the{' '}
-                <code className="inline-code">&lt;img&gt;</code> tag. Minor
-                visual differences between the two are possible.
+                The <strong>server render</strong> below uses the same MathJax 3
+                engine and is the exact image embedded by the{' '}
+                <code className="inline-code">&lt;img&gt;</code> tag.
               </p>
               <a
-                href="https://katex.org/docs/supported.html"
+                href="https://docs.mathjax.org/en/latest/input/tex/macros/index.html"
                 target="_blank"
                 rel="noreferrer"
                 className="guide-link"
               >
-                KaTeX syntax reference →
+                MathJax supported commands →
               </a>
             </div>
 
@@ -256,6 +256,7 @@ export default function App() {
         ) : (
           <LatexDocs onSelect={handleTexChange} />
         )}
+        </div>
       </aside>
     </div>
   );
