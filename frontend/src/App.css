@@ -17,13 +17,6 @@
   border-right: none;
 }
 
-.panel-left {
-  width: 260px;
-  flex-shrink: 0;
-  background: #fff;
-  overflow-y: auto;
-}
-
 .panel-middle {
   flex: 1;
   min-width: 0;

@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import './App.css';
+import { ExamplesPanel } from './ExamplesPanel.tsx';
 import { HelpPanel } from './HelpPanel.tsx';
 import { ServerRenderPanel } from './ServerRenderPanel.tsx';
 import { LatexEditor } from './editor/LatexEditor.tsx';
 import { LatexCommands } from './reference/LatexCommands.tsx';
 import { LatexDocs } from './reference/LatexDocs.tsx';
 import { MathJaxRenderer } from './shared/MathJaxRenderer.tsx';
-import { DEFAULT_EXAMPLES } from './examples.ts';
 
 const PRODUCTION_BASE =
   import.meta.env.VITE_PRODUCTION_BASE ?? 'https://tex.cheminfo.org';
@@ -34,9 +34,9 @@ export default function App() {
   const [tex, setTex] = useState<string>(getTexFromUrl);
   const [copyFeedback, setCopyFeedback] = useState(false);
   const [zoom, setZoom] = useState<1 | 2 | 3>(2);
-  const [activeTab, setActiveTab] = useState<'reference' | 'commands' | 'help'>(
-    'reference',
-  );
+  const [activeTab, setActiveTab] = useState<
+    'examples' | 'reference' | 'commands' | 'help'
+  >('examples');
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -56,23 +56,6 @@ export default function App() {
 
   return (
     <div className="layout">
-      {/* LEFT: examples panel */}
-      <aside className="panel panel-left">
-        <div className="panel-header">Examples</div>
-        <table className="examples-table">
-          <tbody>
-            {DEFAULT_EXAMPLES.map((formula, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <tr key={index} onClick={() => setTex(formula)}>
-                <td className="formula-cell">
-                  <MathJaxRenderer tex={formula} displayMode={false} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </aside>
-
       {/* MIDDLE: editor + live preview + embed code + server render */}
       <main className="panel panel-middle">
         <div className="section section-editor">
@@ -132,9 +115,16 @@ export default function App() {
         <ServerRenderPanel tex={tex} zoom={zoom} />
       </main>
 
-      {/* RIGHT: reference tabs */}
+      {/* RIGHT: tabs */}
       <aside className="panel panel-right">
         <div className="tab-bar">
+          <button
+            type="button"
+            className={`tab-btn ${activeTab === 'examples' ? 'active' : ''}`}
+            onClick={() => setActiveTab('examples')}
+          >
+            Examples
+          </button>
           <button
             type="button"
             className={`tab-btn ${activeTab === 'reference' ? 'active' : ''}`}
@@ -159,7 +149,9 @@ export default function App() {
         </div>
 
         <div className="tab-content">
-          {activeTab === 'reference' ? (
+          {activeTab === 'examples' ? (
+            <ExamplesPanel onSelect={setTex} />
+          ) : activeTab === 'reference' ? (
             <LatexDocs onSelect={setTex} />
           ) : activeTab === 'commands' ? (
             <LatexCommands onSelect={setTex} />
