@@ -1,0 +1,306 @@
+/* ── Layout ─────────────────────────────────────────────── */
+.layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  gap: 0;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 1px solid #dde1e7;
+}
+
+.panel:last-child {
+  border-right: none;
+}
+
+.panel-left {
+  width: 260px;
+  flex-shrink: 0;
+  background: #fff;
+  overflow-y: auto;
+}
+
+.panel-middle {
+  flex: 1;
+  min-width: 0;
+  background: #fff;
+  overflow-y: auto;
+}
+
+.panel-right {
+  width: 420px;
+  flex-shrink: 0;
+  background: #fff;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Panel header ─────────────────────────────────────────── */
+.panel-header {
+  padding: 8px 12px;
+  font-weight: 600;
+  font-size: 11px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid #dde1e7;
+  background: #f8f9fa;
+  flex-shrink: 0;
+}
+
+/* ── Tabs ─────────────────────────────────────────────────── */
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid #dde1e7;
+  background: #f8f9fa;
+  flex-shrink: 0;
+}
+
+.tab-btn {
+  padding: 10px 18px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #888;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.tab-btn:hover {
+  color: #333;
+}
+
+.tab-btn.active {
+  color: #4338ca;
+  font-weight: 600;
+  border-bottom-color: #4338ca;
+}
+
+/* ── Examples table ──────────────────────────────────────── */
+.examples-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.examples-table tbody tr {
+  cursor: pointer;
+  border-bottom: 1px solid #f0f2f5;
+  transition: background 0.1s;
+}
+
+.examples-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.formula-cell {
+  padding: 8px 10px;
+  overflow: hidden;
+  max-width: 220px;
+}
+
+/* ── Sections ─────────────────────────────────────────────── */
+.section {
+  padding: 12px;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.section-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+
+.section-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+.section-label-row .section-label {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.inline-code {
+  font-family: 'Fira Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 11px;
+  background: #f0f2f5;
+  padding: 1px 4px;
+  border-radius: 3px;
+  color: #555;
+}
+
+/* ── Editor ──────────────────────────────────────────────── */
+.section-editor {
+  flex: 0 0 auto;
+}
+
+.latex-editor {
+  width: 100%;
+}
+
+/* ── KaTeX preview ───────────────────────────────────────── */
+.section-preview {
+  min-height: 80px;
+}
+
+.katex-preview {
+  min-height: 60px;
+  padding: 12px;
+  border: 1px solid #f0f2f5;
+  border-radius: 6px;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+.placeholder {
+  color: #bbb;
+  font-style: italic;
+  font-size: 12px;
+}
+
+/* ── Embed code ──────────────────────────────────────────── */
+.code-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.code-output {
+  flex: 1;
+  height: 54px;
+  padding: 8px 10px;
+  font-family: 'Fira Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 11.5px;
+  border: 1px solid #dde1e7;
+  border-radius: 6px;
+  resize: none;
+  background: #f8f9fa;
+  color: #444;
+}
+
+.copy-btn {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  font-size: 17px;
+  border: 1px solid #dde1e7;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.copy-btn.copied {
+  background: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+/* ── Info notice ─────────────────────────────────────────── */
+.info-notice {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f0f2f5;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #555;
+}
+
+.info-notice p {
+  margin: 0 0 8px;
+}
+
+.info-notice p:last-of-type {
+  margin-bottom: 10px;
+}
+
+.guide-link {
+  font-size: 12px;
+  color: #4338ca;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.guide-link:hover {
+  text-decoration: underline;
+}
+
+/* ── Server preview ──────────────────────────────────────── */
+.section-server-preview {
+  flex: 1;
+}
+
+.server-preview {
+  min-height: 120px;
+  padding: 16px;
+  border: 1px solid #f0f2f5;
+  border-radius: 6px;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+/* ── Icon buttons (SVG / PNG) ────────────────────────────── */
+.icon-btns {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid #dde1e7;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  color: #555;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.icon-btn:hover:not(:disabled) {
+  background: #f0f2f5;
+}
+
+.icon-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.icon-btn.copied {
+  background: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+  cursor: default;
+}

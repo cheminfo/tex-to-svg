@@ -1,0 +1,173 @@
+/* ── Container ───────────────────────────────────────────── */
+.latex-docs {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+
+.docs-hint {
+  margin: 0;
+  font-size: 11px;
+  color: #aaa;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* ── Search ──────────────────────────────────────────────── */
+.docs-search {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #f8fafc;
+  padding: 4px 0 6px;
+  margin: -4px 0 0;
+}
+
+.search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 10px 7px 30px;
+  border: 1px solid #dde3ea;
+  border-radius: 6px;
+  font-size: 12px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aab' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E")
+    no-repeat 9px center;
+  color: #333;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.search-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.search-input::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
+.docs-no-results {
+  margin: 16px 0;
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+}
+
+/* ── Section card ────────────────────────────────────────── */
+.doc-section {
+  border-radius: 8px;
+  border: 1px solid #e8ecf0;
+  overflow: hidden;
+}
+
+.doc-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  padding: 7px 12px;
+  background: color-mix(in srgb, var(--accent) 7%, #fff);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+/* ── Formula rows ────────────────────────────────────────── */
+.doc-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: none;
+  border-bottom: 1px solid #f4f6f8;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+  width: 100%;
+}
+
+.doc-row:last-child {
+  border-bottom: none;
+}
+
+.doc-row:hover {
+  background: color-mix(in srgb, var(--accent) 5%, #fff);
+}
+
+.doc-row-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.doc-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-code {
+  font-family: 'Fira Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 10.5px;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.doc-render {
+  flex-shrink: 0;
+  max-width: 48%;
+  overflow: hidden;
+  font-size: 13px;
+  text-align: right;
+}
+
+/* ── Greek letters grid ──────────────────────────────────── */
+.greek-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  padding: 8px;
+  background: #fff;
+}
+
+.greek-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 7px 4px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.1s;
+  line-height: 1;
+}
+
+.greek-cell:hover {
+  background: color-mix(in srgb, var(--accent) 10%, #fff);
+}
+
+.greek-name {
+  font-family: 'Fira Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 9px;
+  color: #bbb;
+  letter-spacing: 0.02em;
+}

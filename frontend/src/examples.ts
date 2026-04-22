@@ -1,0 +1,16 @@
+export const DEFAULT_EXAMPLES: string[] = [
+  String.raw`L' = L \sqrt{1-\frac{v^2}{c^2}}`,
+  String.raw`\sigma_1 = x + y  \quad \sigma_2 = \frac{x}{y}`,
+  String.raw`x = {-b \pm \sqrt{b^2-4ac} \over 2a}`,
+  'abc',
+  String.raw`\begin{aligned}(a+b)^2 &= (a+b)(a+b) \\ &= a^2 + ab + ba + b^2 \\ &= a^2 + 2ab + b^1\end{aligned}`,
+  String.raw`|x| =\begin{cases}x & \text{ if } x \ge 0 \\-x & \text{ if } x \lt 0\end{cases}`,
+  String.raw`\begin{aligned}y &= (x-1)^2 \\ &= (x-1)(x-1) \\ &= x^2 - 2x + 1\end{aligned}`,
+  String.raw`\begin{pmatrix}aaa & b\cr c & ddd\end{pmatrix}`,
+  String.raw`\def\arraystretch{1.5}\begin{array}{c:c:c}a & b & c \\ \hline d & e & f \\ \hdashline g & h & i\end{array}`,
+  String.raw`\underbrace{a+b+c}_{\text{note}}`,
+  String.raw`\boxed{\pi=\frac c d}`,
+  String.raw`\sum\limits_{n=1}^{\infty} 2^{-n} = 1`,
+  String.raw`\lim\nolimits_{x\to\infty} f(x)`,
+  String.raw`\int_{a}^{b} x^2 dx`,
+];
