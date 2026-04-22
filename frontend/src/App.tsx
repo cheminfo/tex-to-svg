@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import './App.css';
-import { MathJaxRenderer } from './MathJaxRenderer.tsx';
+import { LatexCommands } from './LatexCommands.tsx';
 import { LatexDocs } from './LatexDocs.tsx';
 import { LatexEditor } from './LatexEditor.tsx';
+import { MathJaxRenderer } from './MathJaxRenderer.tsx';
 import { DEFAULT_EXAMPLES } from './examples.ts';
 
 const PRODUCTION_BASE =
@@ -29,8 +30,8 @@ export default function App() {
   const [copiedPng150, setCopiedPng150] = useState(false);
   const [copiedPng300, setCopiedPng300] = useState(false);
   const [serverPreviewKey, setServerPreviewKey] = useState(0);
-  const [activeTab, setActiveTab] = useState<'preview' | 'reference'>(
-    'preview',
+  const [activeTab, setActiveTab] = useState<'reference' | 'commands' | 'help'>(
+    'reference',
   );
   const serverPreviewTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -161,6 +162,54 @@ export default function App() {
             </button>
           </div>
         </div>
+
+        <div className="section section-server-preview">
+          <div className="section-label-row">
+            <span className="section-label">Server render</span>
+            <div className="icon-btns">
+              <button
+                type="button"
+                className={`icon-btn ${copiedSvg ? 'copied' : ''}`}
+                title="Copy SVG to clipboard"
+                onClick={copyServerSvg}
+                disabled={!tex}
+              >
+                {copiedSvg ? '✓ Copied' : 'Copy SVG'}
+              </button>
+              <button
+                type="button"
+                className={`icon-btn ${copiedPng150 ? 'copied' : ''}`}
+                title="Copy PNG at 150 dpi"
+                onClick={() => copyServerPng(150, setCopiedPng150)}
+                disabled={!tex}
+              >
+                {copiedPng150 ? '✓ Copied' : 'Copy PNG 150dpi'}
+              </button>
+              <button
+                type="button"
+                className={`icon-btn ${copiedPng300 ? 'copied' : ''}`}
+                title="Copy PNG at 300 dpi"
+                onClick={() => copyServerPng(300, setCopiedPng300)}
+                disabled={!tex}
+              >
+                {copiedPng300 ? '✓ Copied' : 'Copy PNG 300dpi'}
+              </button>
+            </div>
+          </div>
+          <div className="server-preview">
+            {serverImgSrc ? (
+              <img
+                src={serverImgSrc}
+                alt="Server render"
+                style={{ maxWidth: '100%' }}
+              />
+            ) : (
+              <span className="placeholder">
+                Server preview will appear here
+              </span>
+            )}
+          </div>
+        </div>
       </main>
 
       {/* RIGHT: preview / reference tabs */}
@@ -168,33 +217,60 @@ export default function App() {
         <div className="tab-bar">
           <button
             type="button"
-            className={`tab-btn ${activeTab === 'preview' ? 'active' : ''}`}
-            onClick={() => setActiveTab('preview')}
-          >
-            Preview
-          </button>
-          <button
-            type="button"
             className={`tab-btn ${activeTab === 'reference' ? 'active' : ''}`}
             onClick={() => setActiveTab('reference')}
           >
             Reference
           </button>
+          <button
+            type="button"
+            className={`tab-btn ${activeTab === 'commands' ? 'active' : ''}`}
+            onClick={() => setActiveTab('commands')}
+          >
+            Commands
+          </button>
+          <button
+            type="button"
+            className={`tab-btn ${activeTab === 'help' ? 'active' : ''}`}
+            onClick={() => setActiveTab('help')}
+          >
+            Help
+          </button>
         </div>
 
         <div className="tab-content">
-        {activeTab === 'preview' ? (
-          <>
-            <div className="info-notice">
+          {activeTab === 'reference' ? (
+            <LatexDocs onSelect={handleTexChange} />
+          ) : activeTab === 'commands' ? (
+            <LatexCommands onSelect={handleTexChange} />
+          ) : (
+            <div className="help-panel">
+              <h2 className="help-title">LaTeX → SVG / PNG</h2>
               <p>
-                The <strong>live preview</strong> renders instantly in your
-                browser via MathJax 3 — great for checking syntax as you type.
+                Type or paste any LaTeX math expression into the editor. The{' '}
+                <strong>live preview</strong> renders instantly in your browser
+                via MathJax 3 so you can check syntax as you type.
               </p>
               <p>
-                The <strong>server render</strong> below uses the same MathJax 3
-                engine and is the exact image embedded by the{' '}
-                <code className="inline-code">&lt;img&gt;</code> tag.
+                The <strong>server render</strong> produces a pixel-perfect SVG
+                (or PNG at 150 / 300 dpi) using the same MathJax 3 engine — that
+                is the exact image referenced by the embed code.
               </p>
+              <h3 className="help-subtitle">How to embed</h3>
+              <p>
+                Copy the{' '}
+                <code className="inline-code">&lt;img&gt;</code> tag from the{' '}
+                <em>Embed code</em> field and paste it into any HTML page,
+                Markdown document, Jupyter notebook, or email.
+              </p>
+              <h3 className="help-subtitle">Sharing a formula</h3>
+              <p>
+                The URL in your browser already contains the formula as a{' '}
+                <code className="inline-code">?tex=</code> query parameter — you
+                can share it directly, or paste it back into the editor field to
+                load it.
+              </p>
+              <h3 className="help-subtitle">Resources</h3>
               <a
                 href="https://docs.mathjax.org/en/latest/input/tex/macros/index.html"
                 target="_blank"
@@ -204,58 +280,7 @@ export default function App() {
                 MathJax supported commands →
               </a>
             </div>
-
-            <div className="section section-server-preview">
-              <div className="section-label-row">
-                <span className="section-label">Server render</span>
-                <div className="icon-btns">
-                  <button
-                    type="button"
-                    className={`icon-btn ${copiedSvg ? 'copied' : ''}`}
-                    title="Copy SVG to clipboard"
-                    onClick={copyServerSvg}
-                    disabled={!tex}
-                  >
-                    {copiedSvg ? '✓ Copied' : 'Copy SVG'}
-                  </button>
-                  <button
-                    type="button"
-                    className={`icon-btn ${copiedPng150 ? 'copied' : ''}`}
-                    title="Copy PNG at 150 dpi"
-                    onClick={() => copyServerPng(150, setCopiedPng150)}
-                    disabled={!tex}
-                  >
-                    {copiedPng150 ? '✓ Copied' : 'Copy PNG 150dpi'}
-                  </button>
-                  <button
-                    type="button"
-                    className={`icon-btn ${copiedPng300 ? 'copied' : ''}`}
-                    title="Copy PNG at 300 dpi"
-                    onClick={() => copyServerPng(300, setCopiedPng300)}
-                    disabled={!tex}
-                  >
-                    {copiedPng300 ? '✓ Copied' : 'Copy PNG 300dpi'}
-                  </button>
-                </div>
-              </div>
-              <div className="server-preview">
-                {serverImgSrc ? (
-                  <img
-                    src={serverImgSrc}
-                    alt="Server render"
-                    style={{ maxWidth: '100%' }}
-                  />
-                ) : (
-                  <span className="placeholder">
-                    Server preview will appear here
-                  </span>
-                )}
-              </div>
-            </div>
-          </>
-        ) : (
-          <LatexDocs onSelect={handleTexChange} />
-        )}
+          )}
         </div>
       </aside>
     </div>

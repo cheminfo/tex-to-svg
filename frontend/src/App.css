@@ -227,23 +227,6 @@
   border-color: #c3e6cb;
 }
 
-/* ── Info notice ─────────────────────────────────────────── */
-.info-notice {
-  padding: 14px 16px;
-  border-bottom: 1px solid #f0f2f5;
-  font-size: 13px;
-  line-height: 1.65;
-  color: #555;
-}
-
-.info-notice p {
-  margin: 0 0 8px;
-}
-
-.info-notice p:last-of-type {
-  margin-bottom: 10px;
-}
-
 .guide-link {
   font-size: 12px;
   color: #4338ca;
@@ -270,6 +253,34 @@
   align-items: center;
   justify-content: center;
   overflow: auto;
+}
+
+/* ── Help panel ──────────────────────────────────────────── */
+.help-panel {
+  padding: 16px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #444;
+}
+
+.help-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: #222;
+}
+
+.help-subtitle {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+  margin: 16px 0 6px;
+}
+
+.help-panel p {
+  margin: 0 0 10px;
 }
 
 /* ── Icon buttons (SVG / PNG) ────────────────────────────── */
