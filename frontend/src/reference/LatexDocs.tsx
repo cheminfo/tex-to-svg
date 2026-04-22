@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react';
 
+import { DocSearchBox } from '../shared/DocSearchBox.tsx';
+import { MathJaxRenderer } from '../shared/MathJaxRenderer.tsx';
+import { SectionCard } from '../shared/SectionCard.tsx';
 import './LatexDocs.css';
-import { MathJaxRenderer } from './MathJaxRenderer.tsx';
 import type { DocSection, GreekLetter } from './latexSections.ts';
 import { GREEK_LETTERS, SECTIONS } from './latexSections.ts';
 
@@ -61,51 +63,25 @@ function DocRow({
   );
 }
 
-function Section({
-  section,
-  onSelect,
-}: {
-  section: DocSection;
-  onSelect: (tex: string) => void;
-}) {
-  return (
-    <div
-      className="doc-section"
-      style={{ '--accent': section.accent } as React.CSSProperties}
-    >
-      <div className="doc-section-title">{section.title}</div>
-      <div className="doc-rows">
-        {section.entries.map((entry) => (
-          <DocRow
-            key={entry.tex}
-            entry={entry}
-            accent={section.accent}
-            onSelect={onSelect}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export function LatexDocs({ onSelect }: Props) {
   const [query, setQuery] = useState('');
   const lower = query.toLowerCase().trim();
+  const isSearching = lower.length > 0;
 
   const filteredGreek = useMemo(
     () =>
-      lower
+      isSearching
         ? GREEK_LETTERS.filter(
             (g) =>
               g.name.toLowerCase().includes(lower) ||
               g.command.toLowerCase().includes(lower),
           )
         : GREEK_LETTERS,
-    [lower],
+    [lower, isSearching],
   );
 
   const filteredSections = useMemo(() => {
-    if (!lower) return SECTIONS;
+    if (!isSearching) return SECTIONS;
     return SECTIONS.map((section) => ({
       ...section,
       entries: section.entries.filter(
@@ -118,49 +94,45 @@ export function LatexDocs({ onSelect }: Props) {
         section.entries.length > 0 ||
         section.title.toLowerCase().includes(lower),
     );
-  }, [lower]);
+  }, [lower, isSearching]);
 
   const totalResults =
     filteredGreek.length +
     filteredSections.reduce((sum, s) => sum + s.entries.length, 0);
-  const isSearching = lower.length > 0;
-  const hasResults = totalResults > 0;
 
   return (
     <div className="latex-docs">
-      <div className="docs-search">
-        <input
-          className="search-input"
-          type="search"
-          placeholder="Search formulas, labels, commands…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          aria-label="Search reference"
-        />
-      </div>
-
-      {!isSearching && (
-        <p className="docs-hint">Click any formula to load it in the editor.</p>
-      )}
-
-      {isSearching && !hasResults && (
-        <p className="docs-no-results">
-          No results for <strong>{query}</strong>
-        </p>
-      )}
+      <DocSearchBox
+        query={query}
+        onChange={setQuery}
+        placeholder="Search formulas, labels, commands…"
+        ariaLabel="Search reference"
+        hint="Click any formula to load it in the editor."
+        isSearching={isSearching}
+        hasResults={totalResults > 0}
+      />
 
       {filteredGreek.length > 0 && (
-        <div
-          className="doc-section"
-          style={{ '--accent': '#e11d48' } as React.CSSProperties}
-        >
-          <div className="doc-section-title">Greek Letters</div>
+        <SectionCard title="Greek Letters" accent="#e11d48">
           <GreekGrid letters={filteredGreek} onSelect={onSelect} />
-        </div>
+        </SectionCard>
       )}
 
       {filteredSections.map((section) => (
-        <Section key={section.title} section={section} onSelect={onSelect} />
+        <SectionCard
+          key={section.title}
+          title={section.title}
+          accent={section.accent}
+        >
+          {section.entries.map((entry) => (
+            <DocRow
+              key={entry.tex}
+              entry={entry}
+              accent={section.accent}
+              onSelect={onSelect}
+            />
+          ))}
+        </SectionCard>
       ))}
     </div>
   );

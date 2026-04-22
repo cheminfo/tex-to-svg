@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import './App.css';
-import { LatexCommands } from './LatexCommands.tsx';
-import { LatexDocs } from './LatexDocs.tsx';
-import { LatexEditor } from './LatexEditor.tsx';
-import { MathJaxRenderer } from './MathJaxRenderer.tsx';
+import { HelpPanel } from './HelpPanel.tsx';
+import { ServerRenderPanel } from './ServerRenderPanel.tsx';
+import { LatexEditor } from './editor/LatexEditor.tsx';
+import { LatexCommands } from './reference/LatexCommands.tsx';
+import { LatexDocs } from './reference/LatexDocs.tsx';
+import { MathJaxRenderer } from './shared/MathJaxRenderer.tsx';
 import { DEFAULT_EXAMPLES } from './examples.ts';
 
 const PRODUCTION_BASE =
@@ -23,19 +25,19 @@ function buildImgTag(tex: string): string {
   return `<img src="${buildRenderUrl(tex, PRODUCTION_BASE)}"/>`;
 }
 
+function flashCopied(setFlag: (value: boolean) => void): void {
+  setFlag(true);
+  setTimeout(() => setFlag(false), 1500);
+}
+
 export default function App() {
   const [tex, setTex] = useState<string>(getTexFromUrl);
   const [copyFeedback, setCopyFeedback] = useState(false);
-  const [copiedSvg, setCopiedSvg] = useState(false);
-  const [copiedPng150, setCopiedPng150] = useState(false);
-  const [copiedPng300, setCopiedPng300] = useState(false);
-  const [serverPreviewKey, setServerPreviewKey] = useState(0);
+  const [zoom, setZoom] = useState<1 | 2 | 3>(2);
   const [activeTab, setActiveTab] = useState<'reference' | 'commands' | 'help'>(
     'reference',
   );
-  const serverPreviewTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Sync tex to URL bar without page reload
   useEffect(() => {
     const url = new URL(window.location.href);
     if (tex) {
@@ -46,58 +48,11 @@ export default function App() {
     window.history.replaceState(null, '', url.toString());
   }, [tex]);
 
-  // Debounce server preview refresh
-  const handleTexChange = useCallback((value: string) => {
-    setTex(value);
-    if (serverPreviewTimer.current) clearTimeout(serverPreviewTimer.current);
-    serverPreviewTimer.current = setTimeout(() => {
-      setServerPreviewKey((k) => k + 1);
-    }, 800);
-  }, []);
-
   const copyToClipboard = useCallback(() => {
-    void navigator.clipboard.writeText(buildImgTag(tex)).then(() => {
-      setCopyFeedback(true);
-      setTimeout(() => setCopyFeedback(false), 1500);
-    });
+    void navigator.clipboard
+      .writeText(buildImgTag(tex))
+      .then(() => flashCopied(setCopyFeedback));
   }, [tex]);
-
-  const copyServerSvg = useCallback(() => {
-    if (!tex) return;
-    void fetch(`/v1/?tex=${encodeURIComponent(tex)}`)
-      .then((response) => response.blob())
-      .then((blob) =>
-        navigator.clipboard.write([
-          new ClipboardItem({ 'image/svg+xml': blob }),
-        ]),
-      )
-      .then(() => {
-        setCopiedSvg(true);
-        setTimeout(() => setCopiedSvg(false), 1500);
-      });
-  }, [tex]);
-
-  const copyServerPng = useCallback(
-    (dpi: 150 | 300, setFlag: (v: boolean) => void) => {
-      if (!tex) return;
-      void fetch(
-        `/v1/?tex=${encodeURIComponent(tex)}&format=png&resolution=${dpi}`,
-      )
-        .then((response) => response.blob())
-        .then((blob) =>
-          navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]),
-        )
-        .then(() => {
-          setFlag(true);
-          setTimeout(() => setFlag(false), 1500);
-        });
-    },
-    [tex],
-  );
-
-  const serverImgSrc = tex
-    ? `/v1/?tex=${encodeURIComponent(tex)}&ts=${serverPreviewKey}`
-    : '';
 
   return (
     <div className="layout">
@@ -108,7 +63,7 @@ export default function App() {
           <tbody>
             {DEFAULT_EXAMPLES.map((formula, index) => (
               // eslint-disable-next-line react/no-array-index-key
-              <tr key={index} onClick={() => handleTexChange(formula)}>
+              <tr key={index} onClick={() => setTex(formula)}>
                 <td className="formula-cell">
                   <MathJaxRenderer tex={formula} displayMode={false} />
                 </td>
@@ -118,26 +73,37 @@ export default function App() {
         </table>
       </aside>
 
-      {/* MIDDLE: editor + preview + embed code */}
+      {/* MIDDLE: editor + live preview + embed code + server render */}
       <main className="panel panel-middle">
         <div className="section section-editor">
           <label className="section-label">
             LaTeX formula — edit directly or paste a{' '}
             <code className="inline-code">?tex=</code> URL
           </label>
-          <LatexEditor
-            value={tex}
-            onChange={handleTexChange}
-            onPasteUrl={handleTexChange}
-          />
+          <LatexEditor value={tex} onChange={setTex} onPasteUrl={setTex} />
         </div>
 
         <div className="section section-preview">
-          <div className="live-preview">
+          <div className="section-label-row">
+            <span className="section-label">Live preview</span>
+            <div className="zoom-btns">
+              {([1, 2, 3] as const).map((z) => (
+                <button
+                  key={z}
+                  type="button"
+                  className={`zoom-btn ${zoom === z ? 'active' : ''}`}
+                  onClick={() => setZoom(z)}
+                >
+                  {z}×
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="live-preview" style={{ fontSize: `${zoom}em` }}>
             {tex ? (
               <MathJaxRenderer tex={tex} displayMode />
             ) : (
-              <span className="placeholder">
+              <span className="placeholder" style={{ fontSize: '0.5em' }}>
                 Live preview will appear here
               </span>
             )}
@@ -163,56 +129,10 @@ export default function App() {
           </div>
         </div>
 
-        <div className="section section-server-preview">
-          <div className="section-label-row">
-            <span className="section-label">Server render</span>
-            <div className="icon-btns">
-              <button
-                type="button"
-                className={`icon-btn ${copiedSvg ? 'copied' : ''}`}
-                title="Copy SVG to clipboard"
-                onClick={copyServerSvg}
-                disabled={!tex}
-              >
-                {copiedSvg ? '✓ Copied' : 'Copy SVG'}
-              </button>
-              <button
-                type="button"
-                className={`icon-btn ${copiedPng150 ? 'copied' : ''}`}
-                title="Copy PNG at 150 dpi"
-                onClick={() => copyServerPng(150, setCopiedPng150)}
-                disabled={!tex}
-              >
-                {copiedPng150 ? '✓ Copied' : 'Copy PNG 150dpi'}
-              </button>
-              <button
-                type="button"
-                className={`icon-btn ${copiedPng300 ? 'copied' : ''}`}
-                title="Copy PNG at 300 dpi"
-                onClick={() => copyServerPng(300, setCopiedPng300)}
-                disabled={!tex}
-              >
-                {copiedPng300 ? '✓ Copied' : 'Copy PNG 300dpi'}
-              </button>
-            </div>
-          </div>
-          <div className="server-preview">
-            {serverImgSrc ? (
-              <img
-                src={serverImgSrc}
-                alt="Server render"
-                style={{ maxWidth: '100%' }}
-              />
-            ) : (
-              <span className="placeholder">
-                Server preview will appear here
-              </span>
-            )}
-          </div>
-        </div>
+        <ServerRenderPanel tex={tex} zoom={zoom} />
       </main>
 
-      {/* RIGHT: preview / reference tabs */}
+      {/* RIGHT: reference tabs */}
       <aside className="panel panel-right">
         <div className="tab-bar">
           <button
@@ -240,46 +160,11 @@ export default function App() {
 
         <div className="tab-content">
           {activeTab === 'reference' ? (
-            <LatexDocs onSelect={handleTexChange} />
+            <LatexDocs onSelect={setTex} />
           ) : activeTab === 'commands' ? (
-            <LatexCommands onSelect={handleTexChange} />
+            <LatexCommands onSelect={setTex} />
           ) : (
-            <div className="help-panel">
-              <h2 className="help-title">LaTeX → SVG / PNG</h2>
-              <p>
-                Type or paste any LaTeX math expression into the editor. The{' '}
-                <strong>live preview</strong> renders instantly in your browser
-                via MathJax 3 so you can check syntax as you type.
-              </p>
-              <p>
-                The <strong>server render</strong> produces a pixel-perfect SVG
-                (or PNG at 150 / 300 dpi) using the same MathJax 3 engine — that
-                is the exact image referenced by the embed code.
-              </p>
-              <h3 className="help-subtitle">How to embed</h3>
-              <p>
-                Copy the{' '}
-                <code className="inline-code">&lt;img&gt;</code> tag from the{' '}
-                <em>Embed code</em> field and paste it into any HTML page,
-                Markdown document, Jupyter notebook, or email.
-              </p>
-              <h3 className="help-subtitle">Sharing a formula</h3>
-              <p>
-                The URL in your browser already contains the formula as a{' '}
-                <code className="inline-code">?tex=</code> query parameter — you
-                can share it directly, or paste it back into the editor field to
-                load it.
-              </p>
-              <h3 className="help-subtitle">Resources</h3>
-              <a
-                href="https://docs.mathjax.org/en/latest/input/tex/macros/index.html"
-                target="_blank"
-                rel="noreferrer"
-                className="guide-link"
-              >
-                MathJax supported commands →
-              </a>
-            </div>
+            <HelpPanel />
           )}
         </div>
       </aside>

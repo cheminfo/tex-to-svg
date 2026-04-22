@@ -1,6 +1,3 @@
-/* Reuses .doc-section, .doc-section-title, .doc-rows, .docs-search,
-   .search-input, .docs-hint, .docs-no-results from LatexDocs.css */
-
 .cmd-row {
   display: flex;
   align-items: center;

@@ -283,6 +283,34 @@
   margin: 0 0 10px;
 }
 
+/* ── Zoom controls ───────────────────────────────────────── */
+.zoom-btns {
+  display: flex;
+  gap: 2px;
+}
+
+.zoom-btn {
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid #dde1e7;
+  border-radius: 4px;
+  background: #fff;
+  color: #666;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+
+.zoom-btn:hover {
+  background: #f0f2f5;
+}
+
+.zoom-btn.active {
+  background: #4338ca;
+  color: #fff;
+  border-color: #4338ca;
+}
+
 /* ── Icon buttons (SVG / PNG) ────────────────────────────── */
 .icon-btns {
   display: flex;

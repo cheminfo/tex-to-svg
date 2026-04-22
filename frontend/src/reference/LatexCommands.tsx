@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react';
 
+import { DocSearchBox } from '../shared/DocSearchBox.tsx';
+import { MathJaxRenderer } from '../shared/MathJaxRenderer.tsx';
+import { SectionCard } from '../shared/SectionCard.tsx';
 import './LatexCommands.css';
-import { MathJaxRenderer } from './MathJaxRenderer.tsx';
 import type { CommandEntry, CommandGroup } from './latexCommandList.ts';
 import { COMMAND_GROUPS } from './latexCommandList.ts';
 
@@ -43,39 +45,13 @@ function CommandRow({
   );
 }
 
-function CommandSection({
-  group,
-  onSelect,
-}: {
-  group: CommandGroup;
-  onSelect: (tex: string) => void;
-}) {
-  return (
-    <div
-      className="doc-section"
-      style={{ '--accent': group.accent } as React.CSSProperties}
-    >
-      <div className="doc-section-title">{group.title}</div>
-      <div className="doc-rows">
-        {group.entries.map((entry) => (
-          <CommandRow
-            key={entry.label}
-            entry={entry}
-            accent={group.accent}
-            onSelect={onSelect}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export function LatexCommands({ onSelect }: Props) {
   const [query, setQuery] = useState('');
   const lower = query.toLowerCase().trim();
+  const isSearching = lower.length > 0;
 
   const filteredGroups = useMemo(() => {
-    if (!lower) return COMMAND_GROUPS;
+    if (!isSearching) return COMMAND_GROUPS;
     return COMMAND_GROUPS.map((group) => ({
       ...group,
       entries: group.entries.filter(
@@ -89,7 +65,7 @@ export function LatexCommands({ onSelect }: Props) {
         group.entries.length > 0 ||
         group.title.toLowerCase().includes(lower),
     );
-  }, [lower]);
+  }, [lower, isSearching]);
 
   const totalResults = filteredGroups.reduce(
     (sum, g) => sum + g.entries.length,
@@ -98,29 +74,31 @@ export function LatexCommands({ onSelect }: Props) {
 
   return (
     <div className="latex-docs">
-      <div className="docs-search">
-        <input
-          className="search-input"
-          type="search"
-          placeholder="Search commands, symbols, descriptions…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          aria-label="Search commands"
-        />
-      </div>
+      <DocSearchBox
+        query={query}
+        onChange={setQuery}
+        placeholder="Search commands, symbols, descriptions…"
+        ariaLabel="Search commands"
+        hint="Click any command to load it in the editor."
+        isSearching={isSearching}
+        hasResults={totalResults > 0}
+      />
 
-      {lower && !totalResults && (
-        <p className="docs-no-results">
-          No results for <strong>{query}</strong>
-        </p>
-      )}
-
-      {!lower && (
-        <p className="docs-hint">Click any command to load it in the editor.</p>
-      )}
-
-      {filteredGroups.map((group) => (
-        <CommandSection key={group.title} group={group} onSelect={onSelect} />
+      {filteredGroups.map((group: CommandGroup) => (
+        <SectionCard
+          key={group.title}
+          title={group.title}
+          accent={group.accent}
+        >
+          {group.entries.map((entry) => (
+            <CommandRow
+              key={entry.label}
+              entry={entry}
+              accent={group.accent}
+              onSelect={onSelect}
+            />
+          ))}
+        </SectionCard>
       ))}
     </div>
   );

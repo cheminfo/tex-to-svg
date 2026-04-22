@@ -1,0 +1,55 @@
+.latex-docs {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.docs-hint {
+  margin: 0;
+  font-size: 11px;
+  color: #aaa;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.docs-search {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #f8fafc;
+  padding: 4px 0 6px;
+  margin: -4px 0 0;
+}
+
+.search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 10px 7px 30px;
+  border: 1px solid #dde3ea;
+  border-radius: 6px;
+  font-size: 12px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23aab' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E")
+    no-repeat 9px center;
+  color: #333;
+  outline: none;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.search-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.search-input::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
+.docs-no-results {
+  margin: 16px 0;
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+}

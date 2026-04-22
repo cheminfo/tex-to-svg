@@ -1,0 +1,94 @@
+/* ── Formula rows ────────────────────────────────────────── */
+.doc-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: none;
+  border-bottom: 1px solid #f4f6f8;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+  width: 100%;
+}
+
+.doc-row:last-child {
+  border-bottom: none;
+}
+
+.doc-row:hover {
+  background: color-mix(in srgb, var(--accent) 5%, #fff);
+}
+
+.doc-row-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.doc-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-code {
+  font-family: 'Fira Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 10.5px;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.doc-render {
+  flex: 0 0 45%;
+  min-width: 0;
+  overflow-x: clip;
+  overflow-y: visible;
+  font-size: 12px;
+  text-align: right;
+}
+
+/* ── Greek letters grid ──────────────────────────────────── */
+.greek-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  padding: 8px;
+  background: #fff;
+}
+
+.greek-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 7px 4px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.1s;
+  line-height: 1;
+}
+
+.greek-cell:hover {
+  background: color-mix(in srgb, var(--accent) 10%, #fff);
+}
+
+.greek-name {
+  font-family: 'Fira Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 9px;
+  color: #bbb;
+  letter-spacing: 0.02em;
+}

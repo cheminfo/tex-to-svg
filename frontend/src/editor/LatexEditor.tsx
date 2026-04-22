@@ -18,16 +18,16 @@ const theme = EditorView.theme({
     border: '1px solid #dde1e7',
     borderRadius: '6px',
     background: '#fafafa',
-    minHeight: '160px',
+    minHeight: '80px',
   },
   '&.cm-focused': {
     outline: 'none',
     borderColor: '#4338ca',
     background: '#fff',
   },
-  '.cm-scroller': { minHeight: '160px' },
+  '.cm-scroller': { minHeight: '80px' },
   '.cm-content': { padding: '10px' },
-  '.cm-line': { lineHeight: '1.5' },
+  '.cm-line': { lineHeight: '1.6' },
   '.cm-tooltip.cm-tooltip-autocomplete': { fontFamily: 'inherit' },
 });
 
@@ -69,6 +69,7 @@ export function LatexEditor({ value, onChange, onPasteUrl }: Props) {
           latexLanguage,
           latexCompletion,
           autocompletion({ activateOnTyping: true }),
+          EditorView.lineWrapping,
           theme,
           pasteExtension,
           EditorView.updateListener.of((update) => {
