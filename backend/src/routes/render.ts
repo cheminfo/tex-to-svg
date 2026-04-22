@@ -24,10 +24,25 @@ function injectBackground(svg: string, color: string): string {
 
 /**
  * Register routes for LaTeX rendering.
+ * - GET /    — legacy compat: redirects to /v1/ when tex param is present
+ *              and the client is not a browser (e.g. an <img> tag).
  * - GET /v1/ — canonical renderer (SVG or PNG)
  * @param fastify - The Fastify instance to register routes on.
  */
 export default async function renderRoutes(fastify: FastifyTyped) {
+  fastify.get(
+    '/',
+    { schema: { querystring: querySchema } },
+    async (request, reply) => {
+      const { tex } = request.query;
+      if (!tex) return reply.callNotFound();
+      const accept = request.headers.accept ?? '';
+      if (accept.includes('text/html')) return reply.callNotFound();
+      const { search } = new URL(request.url, 'http://localhost');
+      return reply.redirect(`/v1/${search}`, 302);
+    },
+  );
+
   fastify.get(
     '/v1/',
     { schema: { querystring: querySchema } },
