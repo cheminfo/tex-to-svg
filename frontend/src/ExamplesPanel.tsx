@@ -1,5 +1,5 @@
-import { MathJaxRenderer } from './shared/MathJaxRenderer.tsx';
 import { DEFAULT_EXAMPLES } from './examples.ts';
+import { MathJaxRenderer } from './shared/MathJaxRenderer.tsx';
 
 interface Props {
   onSelect: (tex: string) => void;

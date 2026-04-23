@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { DocSearchBox } from '../shared/DocSearchBox.tsx';
 import { MathJaxRenderer } from '../shared/MathJaxRenderer.tsx';
 import { SectionCard } from '../shared/SectionCard.tsx';
+
 import './LatexCommands.css';
 import type { CommandEntry, CommandGroup } from './latexCommandList.ts';
 import { COMMAND_GROUPS } from './latexCommandList.ts';
@@ -30,9 +31,7 @@ function CommandRow({
       <div className="cmd-row-left">
         <div className="cmd-signature">
           <span className="cmd-name">{entry.label}</span>
-          {entry.syntax && (
-            <span className="cmd-syntax">{entry.syntax}</span>
-          )}
+          {entry.syntax && <span className="cmd-syntax">{entry.syntax}</span>}
         </div>
         <span className="cmd-info">{entry.info}</span>
       </div>
@@ -62,8 +61,7 @@ export function LatexCommands({ onSelect }: Props) {
       ),
     })).filter(
       (group) =>
-        group.entries.length > 0 ||
-        group.title.toLowerCase().includes(lower),
+        group.entries.length > 0 || group.title.toLowerCase().includes(lower),
     );
   }, [lower, isSearching]);
 

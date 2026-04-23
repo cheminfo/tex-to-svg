@@ -16,10 +16,10 @@ export function MathJaxRenderer({
   const { svg, error } = useMemo(() => {
     try {
       return { svg: renderToSvg(tex, displayMode), error: null };
-    } catch (err) {
+    } catch (error_) {
       return {
         svg: '',
-        error: err instanceof Error ? err.message : String(err),
+        error: error_ instanceof Error ? error_.message : String(error_),
       };
     }
   }, [tex, displayMode]);

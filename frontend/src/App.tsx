@@ -25,6 +25,10 @@ function buildImgTag(tex: string): string {
   return `<img src="${buildRenderUrl(tex, PRODUCTION_BASE)}"/>`;
 }
 
+function buildMdTag(tex: string): string {
+  return `![formula](${buildRenderUrl(tex, PRODUCTION_BASE)})`;
+}
+
 function flashCopied(setFlag: (value: boolean) => void): void {
   setFlag(true);
   setTimeout(() => setFlag(false), 1500);
@@ -33,6 +37,7 @@ function flashCopied(setFlag: (value: boolean) => void): void {
 export default function App() {
   const [tex, setTex] = useState<string>(getTexFromUrl);
   const [copyFeedback, setCopyFeedback] = useState(false);
+  const [copyMdFeedback, setCopyMdFeedback] = useState(false);
   const [zoom, setZoom] = useState<1 | 2 | 3>(2);
   const [activeTab, setActiveTab] = useState<
     'examples' | 'reference' | 'commands' | 'help'
@@ -52,6 +57,12 @@ export default function App() {
     void navigator.clipboard
       .writeText(buildImgTag(tex))
       .then(() => flashCopied(setCopyFeedback));
+  }, [tex]);
+
+  const copyMdToClipboard = useCallback(() => {
+    void navigator.clipboard
+      .writeText(buildMdTag(tex))
+      .then(() => flashCopied(setCopyMdFeedback));
   }, [tex]);
 
   return (
@@ -96,6 +107,7 @@ export default function App() {
         <div className="section section-code">
           <label className="section-label">Embed code</label>
           <div className="code-row">
+            <span className="code-format-label">HTML</span>
             <textarea
               className="code-output"
               readOnly
@@ -105,9 +117,59 @@ export default function App() {
               type="button"
               className={`copy-btn ${copyFeedback ? 'copied' : ''}`}
               onClick={copyToClipboard}
-              title="Copy to clipboard"
+              title="Copy HTML to clipboard"
             >
-              {copyFeedback ? '✓' : '📋'}
+              {copyFeedback ? (
+                '✓'
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="9" y="2" width="10" height="13" rx="2" />
+                  <path d="M5 6H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1" />
+                </svg>
+              )}
+            </button>
+          </div>
+          <div className="code-row">
+            <span className="code-format-label">MD</span>
+            <textarea
+              className="code-output"
+              readOnly
+              value={tex ? buildMdTag(tex) : ''}
+            />
+            <button
+              type="button"
+              className={`copy-btn ${copyMdFeedback ? 'copied' : ''}`}
+              onClick={copyMdToClipboard}
+              title="Copy Markdown to clipboard"
+            >
+              {copyMdFeedback ? (
+                '✓'
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="9" y="2" width="10" height="13" rx="2" />
+                  <path d="M5 6H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1" />
+                </svg>
+              )}
             </button>
           </div>
         </div>

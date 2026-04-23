@@ -184,6 +184,22 @@
   align-items: flex-start;
 }
 
+.code-row + .code-row {
+  margin-top: 6px;
+}
+
+.code-format-label {
+  flex-shrink: 0;
+  width: 28px;
+  padding-top: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #888;
+  text-align: right;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .code-output {
   flex: 1;
   height: 54px;
@@ -291,7 +307,10 @@
   background: #fff;
   color: #666;
   cursor: pointer;
-  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  transition:
+    background 0.12s,
+    color 0.12s,
+    border-color 0.12s;
 }
 
 .zoom-btn:hover {

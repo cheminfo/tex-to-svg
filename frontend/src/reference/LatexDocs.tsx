@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { DocSearchBox } from '../shared/DocSearchBox.tsx';
 import { MathJaxRenderer } from '../shared/MathJaxRenderer.tsx';
 import { SectionCard } from '../shared/SectionCard.tsx';
+
 import './LatexDocs.css';
 import type { DocSection, GreekLetter } from './latexSections.ts';
 import { GREEK_LETTERS, SECTIONS } from './latexSections.ts';

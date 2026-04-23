@@ -1,6 +1,6 @@
-import type { GreekLetter } from './latexTypes.ts';
 import { SECTIONS_MATH } from './latexSectionsMath.ts';
 import { SECTIONS_SYMBOLS } from './latexSectionsSymbols.ts';
+import type { GreekLetter } from './latexTypes.ts';
 
 export type { DocEntry, DocSection, GreekLetter } from './latexTypes.ts';
 
